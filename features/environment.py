@@ -28,13 +28,14 @@ def before_all(context):
     context.resource_list = {
         "projects": [],
         "sections": [],
-        "tasks": []
+        "tasks": [],
+        "comments": []
     }
 
     context.url = BASE_URL
     LOGGER.debug("Headers before feature: %s", context.headers)
     projects = get_all_projects(context)
-    LOGGER.debug(projects)
+    # LOGGER.debug(projects)
     context.project_id_from_all = projects["body"][1]["id"]
 
 
@@ -50,8 +51,11 @@ def before_feature(context, feature):
 
 
 def before_scenario(context, scenario):
+    """
+    before
+    """
     LOGGER.debug("Scenario tags: %s", scenario.tags)
-    LOGGER.debug("Scenario Name: %s", scenario.name)
+    LOGGER.debug("***** Scenario Name: %s", scenario.name)
 
     if "project_id" in scenario.tags:
 
@@ -74,6 +78,15 @@ def before_scenario(context, scenario):
         context.task_id = response["body"]["id"]
         LOGGER.debug("Task id created: %s", context.task_id)
         context.resource_list["tasks"].append(context.task_id)
+
+    if "comment_id" in scenario.tags:
+
+        response = create_comment(context=context,
+                                  content="first comment",
+                                  task_id=context.task_id)
+        context.comment_id = response["body"]["id"]
+        LOGGER.debug("Comment id created: %s", context.comment_id)
+        context.resource_list["comments"].append(context.comment_id)
 
 
 def after_scenario(context, scenario):
@@ -146,5 +159,22 @@ def create_task(context, project_id=None, section_id=None):
 
     response = RestClient().send_request(method_name="post", session=context.session, headers=context.headers,
                                          url=context.url + "tasks", data=data)
+
+    return response
+
+
+def create_comment(context, content, task_id):
+    """
+    Create Task request method
+    """
+    data = {
+        "task_id": task_id,
+        "content": content,
+
+    }
+    response = RestClient().send_request("post", session=context.session,
+                                         headers=HEADERS,
+                                         url=context.url + "comments",
+                                         data=data)
 
     return response

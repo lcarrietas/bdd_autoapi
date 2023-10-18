@@ -163,7 +163,7 @@ def close_task(context):
 
 
 @then("I want to reopen the task")
-def step_impl(context):
+def reopen_task(context):
     """
     :type context: behave.runner.Context
     """

@@ -49,7 +49,7 @@ Feature: Comments
     When I call to comments endpoint using "POST" method using the "update comments data" as parameter
     """
     {
-     "content": "comment updated from feature"
+     "content": "comment updated from scenario"
     }
     """
     Then I receive a 200 status code in response

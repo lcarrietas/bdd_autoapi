@@ -38,8 +38,8 @@ class RestClient(metaclass=Singleton):
             response = methods[method_name](url, headers=headers, data=data)
             response.raise_for_status()
             LOGGER.info("Status code: %s", response.status_code)
-            if hasattr(response, "request"):
-                LOGGER.debug("Request: %s", response.request.headers)
+            # if hasattr(response, "request"):
+            #     LOGGER.debug("Request: %s", response.request.headers)
             LOGGER.info("Response: %s", response.text)
             if response.text:
                 response_dict["body"] = json.loads(response.text)

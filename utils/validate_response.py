@@ -3,15 +3,22 @@ import logging
 
 from config.config import ABS_PATH
 from utils.logger import get_logger
-from utils.mysql_connector import MYSQLConnector
+# from utils.mysql_connector import MYSQLConnector
 from utils.singleton import Singleton
 
 LOGGER = get_logger(__name__, logging.DEBUG)
 
 
 class ValidateResponse(metaclass=Singleton):
-
-    def validate_response(self, actual_response, method=None, expected_status_code=200, feature=None, option="file"):
+    """
+    hola
+    """
+    def validate_response(self, actual_response, method=None,
+                          expected_status_code=200, feature=None,
+                          option="file"):
+        """
+        Validate Response
+        """
         # validate json file
         input_data = {}
         if option == "file":
@@ -19,10 +26,11 @@ class ValidateResponse(metaclass=Singleton):
             input_data = self.get_input_data_from_json(file_name)
         else:
             # validate db
-            name = (f"{feature}_{method}_{expected_status_code}", )
-            mysql_connect = MYSQLConnector()
-            query = "SELECT * FROM todo_data.input_data where name = %s;"
-            res = mysql_connect.execute_query(query, param=name)
+            # name = (f"{feature}_{method}_{expected_status_code}", )
+            # mysql_connect = MYSQLConnector()
+            # query = "SELECT * FROM todo_data.input_data where name = %s;"
+            # res = mysql_connect.execute_query(query, param=name)
+            res = []
             if res:
                 json_file = res[0][1]
                 input_data = json.loads(json_file)
@@ -35,6 +43,9 @@ class ValidateResponse(metaclass=Singleton):
             self.validate_value(actual_response["body"], input_data["response"]["body"], field="body")
 
     def validate_value(self, actual_value, expected_value, field):
+        """
+        validate value
+        """
         LOGGER.debug("Validating %s:", field)
         msg_error = f"Expecting '{expected_value}' but received '{actual_value}'"
         if "body" in field:
@@ -69,7 +80,7 @@ class ValidateResponse(metaclass=Singleton):
     @staticmethod
     def compare_json(json1, json2):
         """
-        Compare keys of 2 jsons
+        Compare keys of 2 jsonss
         :param json1:
         :param json2:
         :return: boolean

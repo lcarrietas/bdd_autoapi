@@ -2,8 +2,8 @@
 
 Feature: Sections
 
-  Scenario:  Verify GET all projects is returning all data correctly
-      As a user I want to GET the projects from TODOIST API
+  Scenario:  Verify GET all sections is returning all data correctly
+      As a user I want to GET the sections from TODOIST API
 
     Given I set the base url and headers
     When I call to sections endpoint using "GET" method using the "None" as parameter

@@ -66,7 +66,8 @@ def before_scenario(context, scenario):
 
     if "section_id" in scenario.tags:
 
-        response = create_section(context=context, project_id=context.project_id_from_all,
+        response = create_section(context=context,
+                                  project_id=context.project_id_from_all,
                                   section_name="section x")
         context.section_id = response["body"]["id"]
         LOGGER.debug("Section id created: %s", context.section_id)
@@ -105,30 +106,39 @@ def after_all(context):
         for r in context.resource_list[resource]:
             # i.e https://api.todoist.com/rest/v2/ projects / project_id
             url = f"{context.url}{resource}/{r}"
-            RestClient().send_request(method_name="delete", session=context.session,
+            RestClient().send_request(method_name="delete",
+                                      session=context.session,
                                       url=url, headers=context.headers)
             LOGGER.info("Deleting %s: %s", resource, r)
 
 
 def create_project(context, name_project):
-
+    """
+    Create Project
+    """
     body_project = {
         "name": name_project
     }
-    response = RestClient().send_request(method_name="post", session=context.session,
-                                         url=context.url+"projects", headers=context.headers,
+    response = RestClient().send_request(method_name="post",
+                                         session=context.session,
+                                         url=context.url+"projects",
+                                         headers=context.headers,
                                          data=body_project)
     return response
 
 
 def create_section(context, project_id, section_name):
-
+    """
+    Create Section
+    """
     body_section = {
         "project_id": project_id,
         "name": section_name
     }
-    response = RestClient().send_request(method_name="post", session=context.session,
-                                         url=context.url+"sections", headers=context.headers,
+    response = RestClient().send_request(method_name="post",
+                                         session=context.session,
+                                         url=context.url+"sections",
+                                         headers=context.headers,
                                          data=body_section)
     return response
 
@@ -139,15 +149,20 @@ def get_all_projects(context):
     :param context:   object    Store contextual information about test
     :return:
     """
-    response = RestClient().send_request(method_name="get", session=context.session,
-                                         url=context.url + "projects", headers=context.headers)
+    response = RestClient().send_request(method_name="get",
+                                         session=context.session,
+                                         url=context.url + "projects",
+                                         headers=context.headers)
 
     return response
 
 
 def create_task(context, project_id=None, section_id=None):
+    """
+    Create task
+    """
     data = {
-        "content": "Task created in feature",
+        "content": "Precondition task in before scenario",
         "due_string": "tomorrow at 11:00",
         "due_lang": "en",
         "priority": 4
@@ -157,7 +172,9 @@ def create_task(context, project_id=None, section_id=None):
     if section_id:
         data["section_id"] = section_id
 
-    response = RestClient().send_request(method_name="post", session=context.session, headers=context.headers,
+    response = RestClient().send_request(method_name="post",
+                                         session=context.session,
+                                         headers=context.headers,
                                          url=context.url + "tasks", data=data)
 
     return response

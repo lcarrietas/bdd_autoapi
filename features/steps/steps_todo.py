@@ -27,8 +27,8 @@ def step_set_base_url(context):
 @then('I receive a {status_code:d} status code in response')
 def step_verify_status_code(context, status_code):
     LOGGER.debug("Status code from response: %s", context.response["status"])
-    LOGGER.debug("Status code param: %s", type(status_code))
-    LOGGER.debug("Status code response: %s", type(context.response["status"]))
+    # LOGGER.debug("Status code param: %s", type(status_code))
+    # LOGGER.debug("Status code response: %s", type(context.response["status"]))
     context.status_code = status_code
     assert int(status_code) == context.response["status"], " Expected 200 but received " + str(context.response["status"])
 
@@ -69,7 +69,7 @@ def step_call_endpoint(context, feature, method_name, param):
 
     LOGGER.debug("Response: %s", response)
     # add resources created to clean up lists
-    if method_name == "POST":
+    if method_name == "POST" and "update" not in param:
         if response:
             append_to_resources_list(context, response)
 
@@ -78,7 +78,7 @@ def step_call_endpoint(context, feature, method_name, param):
 
 
 @step("I validate the response data from {option}")
-def step_impl(context, option):
+def step_impl_to_validate_response(context, option):
     """
     :param option:  str     option to validate response can be: file or database
     :type context: behave.runner.Context
@@ -123,6 +123,9 @@ def append_to_resources_list(context, response):
 
 
 def get_data_by_feature(context):
+    """
+    Methid to replace ids in the request body
+    """
     LOGGER.debug("JSON: %s", context.text)
     dictionary = json.loads(context.text)
     if context.feature_name == "projects":
@@ -145,14 +148,16 @@ def get_data_by_feature(context):
 
 
 @when("I want close the task")
-def step_impl(context):
+def close_task(context):
     """
     :type context: behave.runner.Context
     """
     task_id = context.task_id
     url_close_task = f"{context.url}tasks/{task_id}/close"
-    response = RestClient().send_request(method_name="post", session=context.session,
-                                         headers=context.headers, url=url_close_task)
+    response = RestClient().send_request(method_name="post",
+                                         session=context.session,
+                                         headers=context.headers,
+                                         url=url_close_task)
 
     assert response["status"] == 204
 
@@ -162,15 +167,12 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    task_id = context.task_id
-    url_close_task = f"{context.url}tasks/{task_id}/close"
-    response_close = RestClient().send_request(method_name="post", session=context.session,
-                                               headers=context.headers, url=url_close_task)
+    _ = close_task(context)
 
-    assert response_close["status"] == 204
-
-    url_reopen_task = f"{context.url}tasks/{task_id}/reopen"
-    response_reopen = RestClient().send_request(method_name="post", session=context.session,
-                                                headers=context.headers, url=url_reopen_task)
+    url_reopen_task = f"{context.url}tasks/{context.task_id}/reopen"
+    response_reopen = RestClient().send_request(method_name="post",
+                                                session=context.session,
+                                                headers=context.headers,
+                                                url=url_reopen_task)
 
     context.response = response_reopen

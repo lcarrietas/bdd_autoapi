@@ -19,7 +19,7 @@ Feature: Comments
     """
     {
      "task_id": "task_id",
-     "content": "comment created from feature"
+     "content": "comment created in scenario"
     }
     """
     Then I receive a 200 status code in response
@@ -40,7 +40,7 @@ Feature: Comments
     Given I set the base url and headers
     When I call to comments endpoint using "DELETE" method using the "comment_id" as parameter
     Then I receive a 204 status code in response
-    # And I validate the response data from file
+    And I validate the response data from file
 
   @task_id @comment_id
   Scenario:  Verify POST comments endpoint update the comment correctly

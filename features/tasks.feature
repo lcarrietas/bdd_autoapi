@@ -59,3 +59,15 @@ Feature: Tasks
     When I want close the task
     Then I want to reopen the task
     And I receive a 204 status code in response
+
+  @task_id
+  Scenario:  Verify POST tasks endpoint update the task correctly
+      As a user I want to update a task from TODOIST API
+    Given I set the base url and headers
+    When I call to tasks endpoint using "POST" method using the "update task data" as parameter
+    """
+    {
+     "content": "task updated from scenario"
+    }
+    """
+    Then I receive a 200 status code in response

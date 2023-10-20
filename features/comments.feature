@@ -9,6 +9,7 @@ Feature: Comments
     Given I set the base url and headers
     When I call to comments endpoint using "GET" method using the "None" as parameter
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
   @task_id
   Scenario:  Verify POST comments creates the comment correctly
@@ -31,6 +32,7 @@ Feature: Comments
     Given I set the base url and headers
     When I call to tasks endpoint using "GET" method using the "comment id" as parameter
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
 
   @task_id @comment_id

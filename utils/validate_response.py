@@ -51,7 +51,7 @@ class ValidateResponse(metaclass=Singleton):
         if "body" in field:
             # compare 2 jsons
             if isinstance(actual_value, list):
-                assert self.compare_json(expected_value[0], actual_value[0]), msg_error
+                assert self.compare_json(expected_value, actual_value[0]), msg_error
             else:
                 assert self.compare_json(expected_value, actual_value), msg_error
         elif "headers" in field:

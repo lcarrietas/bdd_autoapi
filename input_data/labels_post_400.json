@@ -1,0 +1,15 @@
+{
+    "request": {
+      "method": "POST",
+      "url": "/labels"
+    },
+    "response": {
+      "body": {
+          "msg": "Label with this name already exists"
+      },
+      "headers": {
+        "Content-type": "text/plain; charset=utf-8"
+      },
+      "status": 400
+    }
+  }

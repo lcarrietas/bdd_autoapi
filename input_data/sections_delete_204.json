@@ -1,0 +1,15 @@
+{
+    "request": {
+        "method": "DELETE",
+        "url": "/sections"
+    },
+    "response": {
+        "body":   {
+            "msg": "No body content"
+        },
+        "headers": {
+            "Content-type": "application/json"
+        },
+        "status": 204
+    }
+}

@@ -8,6 +8,7 @@ Feature: Tasks
     Given I set the base url and headers
     When I call to tasks endpoint using "GET" method using the "None" as parameter
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
 
   Scenario:  Verify POST tasks creates the task correctly
@@ -24,6 +25,7 @@ Feature: Tasks
     }
     """
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
   @project_id
   Scenario:  Verify POST tasks creates the task using a project provided correctly
@@ -41,7 +43,7 @@ Feature: Tasks
     }
     """
     Then I receive a 200 status code in response
-
+    And I validate the response data from file
 
   @task_id
   Scenario:  Verify DELETE task delete the section correctly
@@ -59,6 +61,7 @@ Feature: Tasks
     When I want close the task
     Then I want to reopen the task
     And I receive a 204 status code in response
+    And I validate the response data from file
 
   @task_id
   Scenario:  Verify POST tasks endpoint update the task correctly
@@ -71,3 +74,4 @@ Feature: Tasks
     }
     """
     Then I receive a 200 status code in response
+    And I validate the response data from file

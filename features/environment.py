@@ -5,6 +5,7 @@ environment.py
     file with all fixture methods for feature and step files
 """
 import logging
+from random import randint
 
 import requests
 
@@ -26,10 +27,11 @@ def before_all(context):
     context.section_list = []
     context.task_list = []
     context.resource_list = {
-        "projects": [],
-        "sections": [],
+        "labels": [],
+        "comments": [],
         "tasks": [],
-        "comments": []
+        "sections": [],
+        "projects": []
     }
 
     context.url = BASE_URL
@@ -88,6 +90,16 @@ def before_scenario(context, scenario):
         context.comment_id = response["body"]["id"]
         LOGGER.debug("Comment id created: %s", context.comment_id)
         context.resource_list["comments"].append(context.comment_id)
+
+    if "label_id" in scenario.tags:
+
+        response = create_label(context=context,
+                                content="before scenario label",
+                                )
+        context.label_id = response["body"]["id"]
+        context.label_name = response["body"]["name"]
+        LOGGER.debug("Label id of created label: %s", context.label_id)
+        context.resource_list["labels"].append(context.label_id)
 
 
 def after_scenario(context, scenario):
@@ -192,6 +204,26 @@ def create_comment(context, content, task_id):
     response = RestClient().send_request("post", session=context.session,
                                          headers=HEADERS,
                                          url=context.url + "comments",
+                                         data=data)
+
+    return response
+
+
+def create_label(context, content):
+    """
+    Create label request method
+
+    :param: content: label name
+
+    :return: create request response
+    """
+    data = {
+        "name": f'{content}{randint(0,1000)}',
+        "color": "yellow"
+    }
+    response = RestClient().send_request("post", session=context.session,
+                                         headers=HEADERS,
+                                         url=context.url + "labels",
                                          data=data)
 
     return response

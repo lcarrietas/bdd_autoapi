@@ -20,12 +20,20 @@ LOGGER = get_logger(__name__, logging.DEBUG)
 
 @given('I set the base url and headers')
 def step_set_base_url(context):
+    """
+    Setup todoist base url for request
+
+    :param context: current context
+    """
     LOGGER.debug("HEADERS: %s", context.headers)
     LOGGER.debug("URL: %s", context.url)
 
 
 @then('I receive a {status_code:d} status code in response')
 def step_verify_status_code(context, status_code):
+    """
+    Verify response Status code
+    """
     LOGGER.debug("Status code from response: %s", context.response["status"])
     # LOGGER.debug("Status code param: %s", type(status_code))
     # LOGGER.debug("Status code response: %s", type(context.response["status"]))
@@ -38,6 +46,11 @@ def step_verify_status_code(context, status_code):
 def step_call_endpoint(context, feature, method_name, param):
     """
     call endpoint
+
+    :param context: current context
+    :param feature: feature name
+    :param method_name: request HTTP method
+    :param param: specify is the there is request params
     """
     # url base "https://api.todoist.com/rest/v2/" + feature .ie. projects, sections, tasks, etc.
     url = context.url + context.feature_name
@@ -48,6 +61,7 @@ def step_call_endpoint(context, feature, method_name, param):
             url = get_url_by_feature(context)
         if context.text:
             data = get_data_by_feature(context)
+
     elif method_name == "DELETE" or (method_name == "GET" and param != "None"):
         url = get_url_by_feature(context)
     elif method_name == "GET" and param == "None" and feature == "comments":
@@ -80,7 +94,7 @@ def step_call_endpoint(context, feature, method_name, param):
 @step("I validate the response data from {option}")
 def step_impl_to_validate_response(context, option):
     """
-    :param option:  str     option to validate response can be: file or database
+    :param option:  str option to validate response can be: file or database
     :type context: behave.runner.Context
     """
     ValidateResponse().validate_response(actual_response=context.response,
@@ -91,6 +105,13 @@ def step_impl_to_validate_response(context, option):
 
 
 def get_url_by_feature(context):
+    """
+    Buiuld url by feature
+
+    params: context
+
+    return: feature endpoint url
+    """
     feature_id = None
     if context.feature_name == "projects":
         feature_id = context.project_id
@@ -100,6 +121,8 @@ def get_url_by_feature(context):
         feature_id = context.task_id
     elif context.feature_name == "comments":
         feature_id = context.comment_id
+    elif context.feature_name == "labels":
+        feature_id = context.label_id
 
     url = f"{context.url}{context.feature_name}/{feature_id}"
 
@@ -112,19 +135,22 @@ def append_to_resources_list(context, response):
     :param context:
     :param response:
     """
-    if context.feature_name == "projects":
-        context.resource_list["projects"].append(response["body"]["id"])
-    if context.feature_name == "sections":
-        context.resource_list["sections"].append(response["body"]["id"])
-    if context.feature_name == "tasks":
-        context.resource_list["tasks"].append(response["body"]["id"])
-    if context.feature_name == "comments":
-        context.resource_list["comments"].append(response["body"]["id"])
+    if response['status'] == 200:
+        if context.feature_name == "projects":
+            context.resource_list["projects"].append(response["body"]["id"])
+        if context.feature_name == "sections":
+            context.resource_list["sections"].append(response["body"]["id"])
+        if context.feature_name == "tasks":
+            context.resource_list["tasks"].append(response["body"]["id"])
+        if context.feature_name == "comments":
+            context.resource_list["comments"].append(response["body"]["id"])
+        if context.feature_name == "labels":
+            context.resource_list["labels"].append(response["body"]["id"])
 
 
 def get_data_by_feature(context):
     """
-    Methid to replace ids in the request body
+    Method to replace ids in the request body
     """
     LOGGER.debug("JSON: %s", context.text)
     dictionary = json.loads(context.text)
@@ -142,6 +168,9 @@ def get_data_by_feature(context):
     if context.feature_name == "comments":
         if "task_id" in dictionary:
             dictionary["task_id"] = context.task_id
+    if context.feature_name == "labels":
+        if "label_name" in context.text:
+            dictionary["name"] = context.label_name
 
     LOGGER.debug("Dictionary created: %s", dictionary)
     return dictionary
@@ -174,5 +203,5 @@ def reopen_task(context):
                                                 session=context.session,
                                                 headers=context.headers,
                                                 url=url_reopen_task)
-
+    context.method = "reopen"
     context.response = response_reopen

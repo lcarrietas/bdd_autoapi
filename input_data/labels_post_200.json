@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/labels"
+    },
+    "response": {
+        "body":   {
+            "id": "any",
+            "name": "label",
+            "color": "colorful",
+            "order": 1,
+            "is_favorite": false
+        },
+        "headers": {
+            "Content-type": "application/json"
+        },
+        "status": 200
+    }
+}

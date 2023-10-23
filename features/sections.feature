@@ -8,6 +8,7 @@ Feature: Sections
     Given I set the base url and headers
     When I call to sections endpoint using "GET" method using the "None" as parameter
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
   @project_id
   Scenario:  Verify POST section creates the section correctly
@@ -22,6 +23,7 @@ Feature: Sections
     }
     """
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
   @section_id
   Scenario:  Verify DELETE section delete the section correctly
@@ -29,3 +31,4 @@ Feature: Sections
 
     Given I set the base url and headers
     When I call to sections endpoint using "DELETE" method using the "section_id" as parameter
+    And I validate the response data from file

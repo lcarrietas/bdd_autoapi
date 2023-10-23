@@ -30,11 +30,12 @@ class ValidateResponse(metaclass=Singleton):
             # mysql_connect = MYSQLConnector()
             # query = "SELECT * FROM todo_data.input_data where name = %s;"
             # res = mysql_connect.execute_query(query, param=name)
-            res = []
-            if res:
-                json_file = res[0][1]
-                input_data = json.loads(json_file)
-                LOGGER.debug("Input Data from DB: %s", input_data)
+            # res = []
+            # if res:
+            #     json_file = res[0][1]
+            #     input_data = json.loads(json_file)
+            #     LOGGER.debug("Input Data from DB: %s", input_data)
+            pass
 
         if 'body' in actual_response and actual_response["body"] is not None:
             # compare actual with input data

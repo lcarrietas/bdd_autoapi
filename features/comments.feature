@@ -1,4 +1,4 @@
-@tasks @acceptance
+@comments @acceptance
 
 Feature: Comments
 
@@ -24,6 +24,7 @@ Feature: Comments
     }
     """
     Then I receive a 200 status code in response
+    And I validate the response data from file
 
   @task_id @comment_id
   Scenario:  Verify GET comment by id return comment data correctly
@@ -55,3 +56,4 @@ Feature: Comments
     }
     """
     Then I receive a 200 status code in response
+    And I validate the response data from file

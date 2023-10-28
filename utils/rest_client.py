@@ -22,6 +22,16 @@ class RestClient(metaclass=Singleton):
     """
 
     def send_request(self, method_name, session=None, url="", headers="", data=None):
+        """
+        Send request
+
+        :param: method_name: HTTP methos to use
+        :param: session: current session
+        :param: url: request URL
+        :param: data: Request body
+
+        :return: Request response as dict
+        """
         response_dict = {}
         methods = {
             "get": session.get,
@@ -99,5 +109,5 @@ if __name__ == '__main__':
         "Authorization": f"Bearer {token}"
     }
     RestClient().send_request("get", session=requests.Session(),
-                             url="https://api.todoist.com/rest/v2/projects",
-                             headers=headers)
+                              url="https://api.todoist.com/rest/v2/projects",
+                              headers=headers)

@@ -26,13 +26,6 @@ def before_all(context):
     context.project_list = []
     context.section_list = []
     context.task_list = []
-    context.resource_list = {
-        "labels": [],
-        "comments": [],
-        "tasks": [],
-        "sections": [],
-        "projects": []
-    }
 
     context.url = BASE_URL
     LOGGER.debug("Headers before feature: %s", context.headers)
@@ -48,8 +41,14 @@ def before_feature(context, feature):
     :param feature:     object      Contains feature information
     """
     LOGGER.debug("Before feature")
+    context.resource_list = {
+        "labels": [],
+        "comments": [],
+        "tasks": [],
+        "sections": [],
+        "projects": []
+    }
     context.feature_name = feature.name.lower()
-    # context.url = BASE_URL + feature.name.lower()
 
 
 def before_scenario(context, scenario):
@@ -103,25 +102,28 @@ def before_scenario(context, scenario):
 
 
 def after_scenario(context, scenario):
-    print("after scenario")
+    """
+    Method to execute instructions after scenario
+    """
+    LOGGER.info(f"*** Status for Scenario {scenario.name}: {scenario.status}!***")
 
 
 def after_feature(context, feature):
-    print("After feature")
+    """
+    Method to execute instructions after feature
+    :param context: current context
+    :param feature: current feature
+
+    """
+    LOGGER.debug("After feature for  %s feature", feature.name)
+    delete_resources(context)
 
 
 def after_all(context):
+    """
+    After all hook
+    """
     LOGGER.debug("After all")
-    LOGGER.debug("Resources: %s", context.resource_list)
-    for resource in context.resource_list:
-        LOGGER.debug("Resource: %s", resource)
-        for r in context.resource_list[resource]:
-            # i.e https://api.todoist.com/rest/v2/ projects / project_id
-            url = f"{context.url}{resource}/{r}"
-            RestClient().send_request(method_name="delete",
-                                      session=context.session,
-                                      url=url, headers=context.headers)
-            LOGGER.info("Deleting %s: %s", resource, r)
 
 
 def create_project(context, name_project):
@@ -227,3 +229,18 @@ def create_label(context, content):
                                          data=data)
 
     return response
+
+
+def delete_resources(context):
+    """
+    Delete al resources created for feature execution
+    """
+    LOGGER.debug("Resources: %s", context.resource_list)
+    for resource in context.resource_list:
+        LOGGER.debug("Resource: %s", resource)
+        for res in context.resource_list[resource]:
+            # i.e https://api.todoist.com/rest/v2/ projects / project_id
+            url = f"{context.url}{resource}/{res}"
+            RestClient().send_request(method_name="delete", session=context.session,
+                                      url=url, headers=context.headers)
+            LOGGER.info("Deleting %s: %s", resource, res)

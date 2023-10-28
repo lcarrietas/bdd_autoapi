@@ -269,6 +269,8 @@ logging-format-style=old
 # Logging modules to check that the string format arguments are in logging
 # function parameter format.
 logging-modules=logging
+enable=logging-format-interpolation
+disable=logging-fstring-interpolation
 
 
 [FORMAT]

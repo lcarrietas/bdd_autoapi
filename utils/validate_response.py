@@ -13,6 +13,7 @@ class ValidateResponse(metaclass=Singleton):
     """
     hola
     """
+
     def validate_response(self, actual_response, method=None,
                           expected_status_code=200, feature=None,
                           option="file"):

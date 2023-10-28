@@ -1,0 +1,15 @@
+{
+    "request": {
+      "method": "POST",
+      "url": "/comments"
+    },
+    "response": {
+      "body": {
+          "msg": "Required argument is missing"
+      },
+      "headers": {
+        "Content-type": "text/plain; charset=utf-8"
+      },
+      "status": 400
+    }
+  }

@@ -30,5 +30,24 @@ Feature: Sections
       As a user I want to delete a section from TODOIST API
 
     Given I set the base url and headers
-    When I call to sections endpoint using "DELETE" method using the "section_id" as parameter
-    And I validate the response data from file
+     When I call to sections endpoint using "DELETE" method using the "section_id" as parameter
+      And I validate the response data from file
+
+  @project_id
+  Scenario Outline:  Verify POST section creates multiple sections correctly
+      As a user I want to create multiple section from TODOIST API
+
+    Given I set the base url and headers
+     When I call to sections endpoint using "POST" method using the "section data" as parameter
+    """
+    {
+      "project_id": "project_id",
+      "name": "<section_name>"
+    }
+    """
+    Examples:
+    |   section_name          |
+    | First Section Created   |
+    | Second Section Created  |
+    | Third Section Created   |
+    | Fourth Section Created  |

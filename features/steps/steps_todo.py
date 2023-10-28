@@ -99,7 +99,7 @@ def step_impl_to_validate_response(context, option):
     """
     ValidateResponse().validate_response(actual_response=context.response,
                                          method=context.method.lower(),
-                                         expected_status_code=context.status_code,
+                                         expected_status_code=context.response['status'],
                                          feature=context.feature_name,
                                          option=option)
 
